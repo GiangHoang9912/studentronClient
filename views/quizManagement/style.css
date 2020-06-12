@@ -1,0 +1,15 @@
+.content{
+  display: flex;
+  flex-direction: column;
+}
+
+td,th {
+  border: 1px solid gray;
+}
+table{
+  width: 100%;
+}
+
+* {
+  text-align: center;
+}
