@@ -25,7 +25,7 @@ document.querySelector('button').addEventListener('click', async (event) => {
     }
     else
       console.log('account wrong')
-  }).catch(
+  }).catch(() =>
     console.log('login fail')
   )
 })
@@ -34,6 +34,8 @@ ipcRenderer.once('send-session', (event, user) => {
   sessionStorage.setItem("rule", user.rule);
   sessionStorage.setItem("name", user.userName);
   sessionStorage.setItem("id", user.id);
+
+  ipcRenderer.send('send-session', sessionStorage)
 })
 
 // (function ($) {

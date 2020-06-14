@@ -1,5 +1,5 @@
 {
-  "name": "electron-quick-start",
+  "name": "studentron",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "mainProcess.js",
@@ -20,8 +20,10 @@
     "electron": "^6.0.0"
   },
   "dependencies": {
+    "electron-main-fetch": "^1.0.0",
     "fs-extra": "^9.0.0",
     "nedb": "^1.8.0",
+    "node-fetch": "^2.6.0",
     "socket.io": "^2.3.0"
   }
 }

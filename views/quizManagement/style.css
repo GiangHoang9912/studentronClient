@@ -3,7 +3,7 @@
   flex-direction: column;
 }
 
-td,th {
+td,th,tr {
   border: 1px solid gray;
 }
 table{
@@ -12,4 +12,11 @@ table{
 
 * {
   text-align: center;
+}
+
+.divSubject {
+  text-align: start;
+}
+#btn_add{
+  display: block;
 }

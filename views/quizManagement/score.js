@@ -1,3 +1,4 @@
+btn_Student.disabled = true;
 
 btn_Student.addEventListener('click', (e) => {
   e.preventDefault();
@@ -17,9 +18,7 @@ btn_Logout.addEventListener('click', (e) => {
 
 
 
-async function getAllStudent() {
-  const allStudent = await fetch('http://localhost:3000/allStudent', { method: 'GET' });
-  const allStuson = await allStudent.json();
+async function getAllStudent(allStuson) {
   const accTable = document.querySelector('#account');
   for (const student of allStuson) {
     const trStudent = document.createElement('tr');
@@ -62,7 +61,6 @@ async function getAllStudent() {
 
     })
 
-
     btnShow.appendChild(btnNode)
     tdShow.appendChild(btnShow)
     trStudent.appendChild(tdName);
@@ -72,19 +70,10 @@ async function getAllStudent() {
   };
 
 }
-getAllStudent()
+
+ipcRenderer.send('students-fetching');
 
 
-// const btnShow = document.createElement('button');
-// btnShow.setAttribute('id', `btn_${student._id}`)
-// const node = document.createTextNode('Show');
-// btnShow.appendChild(node);
-// document.querySelector(`#id${student._id}`).appendChild(btnShow);
-
-// btnShow.addEventListener('click', async (e) => {
-//   e.preventDefault();
-//   const arrScore = await fetch(`http:localhost:3000/scoreOfStudent/${student._id}`);
-//   const arrScoreJson = await arrScore.json();
-//   console.log("a");
-//   //console.log(arrScoreJson);
-// })
+ipcRenderer.on('students-json', (_, studentsJson) => {
+  getAllStudent(studentsJson);
+})
