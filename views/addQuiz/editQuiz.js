@@ -27,7 +27,7 @@ ipcRenderer.on('main-send-quiz-edit', (event, payload) => {
 
     ipcRenderer.on('subjects-json', (_, subjectsJson) => {
       for (const subject of subjectsJson) {
-        createOption(subject.code, subject.subjectName)
+        createOption(subject.subjectCode, subject.subjectName)
       }
       selectionTag.value = payload.subjectCode;
       console.log(selectionTag.value)

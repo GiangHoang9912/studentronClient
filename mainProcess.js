@@ -22,6 +22,8 @@ function createWindow() {
       win.loadFile('./views/quizManagement/score.html');
       event.reply('send-session', { userName: user.userName, rule: user.rule, id: user._id });
     } else {
+      win.setSize(400, 200);
+      //win.removeMenu();
       win.loadFile('./views/testUi/test.html');
     }
   })
@@ -147,8 +149,8 @@ ipcMain.on('fetch-post-quiz', async (event, quiz) => {
         buttons: ["Yes", "No"],
         message: "Insert done, Do you really want to quit?"
       }).then((res) => {
+        win.send('update-quiz');
         if (!res.response) {
-          win.send('update-quiz');
           addFrame.close();
         }
       })
@@ -165,7 +167,7 @@ ipcMain.on('fetch-post-quiz', async (event, quiz) => {
 
 ipcMain.on('fetch-post-edit-quiz', async (event, quiz) => {
   await fetch(`http://localhost:3000/updateQuiz/`, {
-    method: 'POST',
+    method: 'PUT',
     body: JSON.stringify(quiz),
     headers: {
       "Content-Type": "application/json; charset=utf-8"
@@ -178,8 +180,8 @@ ipcMain.on('fetch-post-edit-quiz', async (event, quiz) => {
         buttons: ["Yes", "No"],
         message: "Update done, Do you really want to quit?"
       }).then((res) => {
+        win.send('update-quiz');
         if (!res.response) {
-          win.send('update-quiz');
           addFrame.close();
         }
       })
@@ -196,7 +198,7 @@ ipcMain.on('fetch-post-edit-quiz', async (event, quiz) => {
 
 ipcMain.on('disable-enable-quiz', async (event, payload) => {
   await fetch(`http://localhost:3000/disableQuiz/`, {
-    method: 'POST',
+    method: 'PUT',
     body: JSON.stringify(payload),
     headers: {
       "Content-Type": "application/json; charset=utf-8"
@@ -212,3 +214,55 @@ ipcMain.on('disable-enable-quiz', async (event, payload) => {
   }).catch(() => { }
   )
 })
+
+ipcMain.on('login-fail', () => {
+  dialog.showErrorBox('login', 'login fail, please try again...!')
+})
+
+
+let addSubject = null;
+ipcMain.on('add-subject', () => {
+  win.hide();
+  addSubject = new BrowserWindow({
+    parent: win,
+    height: 200,
+    width: 400,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+
+  addSubject.loadFile('./views/addSubject/addSubject.html');
+
+  addSubject.on('close', () => {
+    win.show();
+  })
+
+  ipcMain.on('save-subject', async (event, subject) => {
+    await fetch(`http://localhost:3000/addSubject/`, {
+      method: 'POST',
+      body: JSON.stringify(subject),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((res) => {
+      return res.json();
+    }).then((status) => {
+      if (status.status === 200) {
+        dialog.showMessageBox({
+          buttons: ["Yes", "No"],
+          message: "insert done, Do you really want to quit?"
+        }).then((res) => {
+          win.send('update-subjects');
+          if (!res.response) {
+            addSubject.close();
+          }
+        })
+      } else {
+        throw new Error();
+      }
+    }).catch(() => { }
+    )
+  })
+})
+

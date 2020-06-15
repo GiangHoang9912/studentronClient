@@ -15,7 +15,7 @@ ipcRenderer.send('get-subjects')
 
 ipcRenderer.on('subjects-json', (_, subjectsJson) => {
   for (const subject of subjectsJson) {
-    createOption(subject.code, subject.subjectName)
+    createOption(subject.subjectCode, subject.subjectName)
   }
 })
 
