@@ -1,5 +1,9 @@
 const selectionTag = document.querySelector('#subject');
 const divAnswers = document.querySelector('#answers');
+const { ipcRenderer } = require('electron');
+const scoreTable = document.querySelector('#score');
+const subjectTable = document.querySelector('#subject')
+const tableQuiz = document.querySelector('#quizMana');
 
 const removeSession = () => {
   sessionStorage.removeItem('id');
@@ -193,6 +197,52 @@ const createDivAnswer = (answer, countAnswer, index, isCorrect) => {
   divAnswers.appendChild(divAnswer)
 }
 
+const resetTableSubject = () => {
+  subjectTable.innerHTML = '';
+  const trHeader = document.createElement('tr');
+
+  const thSubjectCode = document.createElement('th');
+  thSubjectCode.textContent = 'Subject Code'
+
+  const thSubjectName = document.createElement('th');
+  thSubjectName.textContent = 'Subject Name'
+
+  const thDelete = document.createElement('th');
+  thDelete.textContent = 'Delete Subject'
+
+  trHeader.appendChild(thSubjectCode);
+  trHeader.appendChild(thSubjectName);
+  trHeader.appendChild(thDelete);
+
+  subjectTable.appendChild(trHeader);
+}
+
+const createTableSubject = (subject) => {
+  console.log(subject)
+  const trSubject = document.createElement('tr')
+
+  const tdSubCode = document.createElement('td')
+  tdSubCode.textContent = subject.subjectCode;
+
+  const tdSubName = document.createElement('td')
+  tdSubName.textContent = subject.subjectName;
+
+  const tdDelete = document.createElement('td')
+  const btnDelete = document.createElement('button')
+  btnDelete.textContent = 'Delete'
+  btnDelete.addEventListener('click', (e) => {
+    e.preventDefault();
+    ipcRenderer.send('delete-subject', subject._id);
+  })
+  tdDelete.appendChild(btnDelete)
+
+  trSubject.appendChild(tdSubCode);
+  trSubject.appendChild(tdSubName);
+  trSubject.appendChild(tdDelete);
+
+  subjectTable.appendChild(trSubject)
+}
 
 
-module.exports = { removeSession, resetTableScore, createOption, createTableQuizzes, createDivAnswer }
+
+module.exports = { createTableSubject, resetTableSubject, removeSession, resetTableScore, createOption, createTableQuizzes, createDivAnswer }
