@@ -1,0 +1,5 @@
+# GET http://localhost:3000/allStudent HTTP/1.1;
+
+
+
+GET http://localhost:3000/getTestExam/MAE101_WMSj9hlTkhKGJTjM HTTP/1.1

@@ -1,34 +1,44 @@
-#question textarea{
-  resize: none;
+#question textarea {
+    resize: none;
 }
 
-#answers textarea{
-  resize: none;
-  width: 25rem;
-  height: 2rem;
+#answers textarea {
+    resize: none;
+    width: 25rem;
+    height: 2rem;
 }
 
-#answers{
-  display: block;
+#answers {
+    display: block;
 }
 
-.divAnswer{
-  display: flex;
-  flex-direction: column;
+.divAnswer {
+    display: flex;
+    flex-direction: column;
 }
 
-#btn_submit{
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
+#btn_submit {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
 }
 
-.divAnswer h3{
-  display: inline;
-  margin: 1rem;
+.divAnswer h3 {
+    display: inline;
+    margin: 1rem;
 }
 
-#btn_add_answer{
-  position: sticky;
-  right: 1rem;
+#btn_add_answer {
+    position: sticky;
+    right: 1rem;
+}
+
+select {
+    height: 30px;
+    outline: none;
+    font-size: small;
+}
+
+option:hover {
+    outline: none;
 }

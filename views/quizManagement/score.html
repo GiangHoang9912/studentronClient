@@ -2,48 +2,57 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Management</title>
-  <link rel="stylesheet" href="./style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <link rel="stylesheet" href="./score.css">
 </head>
 
 <body>
-  <div class="header">
-    <button id="btn_Student">
-      Student
-    </button>
-    <button id="btn_Quizzes">
-      Quizzes Management
-    </button>
-    <button id="btn_Logout">
-      Logout
-    </button>
-  </div>
-  <div class="content">
-    <table id="account">
-      <tr>
-        <th>
-          Student Account Name
-        </th>
-        <th>
-          Show
-        </th>
-      </tr>
-    </table>
-    <div class="studentScore">
-      <h3 id="studentName">Student Name : </h3>
-      <table id="score">
-        <tr>
-          <th>subject</th>
-          <th>score</th>
-        </tr>
-      </table>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="https://image.flaticon.com/icons/png/512/2304/2304450.png" class="admin">
+            </div>
+            <div>
+                <button id="btn_Student">
+            Student
+          </button>
+                <button id="btn_Quizzes">
+            Quizzes Management
+          </button>
+            </div>
+            <div class="logo">
+                <img id="btn_Logout" src="https://image.flaticon.com/icons/svg/483/483343.svg">
+                </img>
+            </div>
+        </div>
+        <div class="content">
+            <h3>Students : </h3>
+            <table id="account">
+                <tr>
+                    <th>
+                        Student Account Name
+                    </th>
+                    <th>
+                        Show
+                    </th>
+                </tr>
+            </table>
+            <div class="studentScore">
+                <h3 id="studentName">Student Name : </h3>
+                <table id="score">
+                    <tr>
+                        <th>subject</th>
+                        <th>score</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="footer"></div>
     </div>
-  </div>
-  <div class="footer"></div>
-  <script src="../quizManagementGlobalParam.js"></script>
-  <script src="./score.js"></script>
+    <script src="../quizManagementGlobalParam.js"></script>
+    <script src="./score.js"></script>
 </body>
 
 </html>
