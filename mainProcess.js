@@ -264,8 +264,6 @@ ipcMain.on('add-subject', () => {
   addSubject.on('close', () => {
     win.show();
   })
-
-
 })
 let quizzes = null;
 ipcMain.on('send-code-subject', async (event, code) => {
@@ -333,5 +331,10 @@ ipcMain.on('delete-subject', async (event, subjectId) => {
       win.send('update-subjects');
     }
   }
+})
+
+ipcMain.once('finish-exam', (event, data) => {
+  console.log(data)
+  //! fetch exam method post
 })
 //MAE101_WMSj9hlTkhKGJTjM

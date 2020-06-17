@@ -1,5 +1,5 @@
 class Exam {
-  constructor() { 
+  constructor(userId, ) { 
     
   }
 }
