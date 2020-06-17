@@ -178,6 +178,7 @@ const createDivAnswer = (answer, countAnswer, index, isCorrect) => {
   const divInput = document.createElement('div');
 
   const inputAnswer = document.createElement('textarea')
+  inputAnswer.setAttribute('required', 'true')
   if (answer) {
     inputAnswer.value = answer
   }

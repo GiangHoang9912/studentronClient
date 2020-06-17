@@ -1,4 +1,5 @@
 const { ipcRenderer } = require("electron");
+const remote = require('electron').remote;
 
 const { createOption, createDivAnswer } = require('../createElement')
 
@@ -61,6 +62,19 @@ submit.addEventListener('submit', (e) => {
       correct: correct
     }
   }
-
-  ipcRenderer.send('fetch-post-quiz', objectQuestion)
+  switch (true) {
+    case (!objectQuestion.subject || Number(objectQuestion.subject) === 0):
+      console.log('@ok')
+      remote.dialog.showErrorBox('', `Subject Code can't blank`)
+      break;
+    case (objectQuestion.quiz.answer.length === 0):
+      remote.dialog.showErrorBox('', `Please add answer...!`)
+      break;
+    case (!objectQuestion.quiz.correct || objectQuestion.quiz.correct.length === 0):
+      remote.dialog.showErrorBox('', `Please add correct answer...!`)
+      break;
+    default:
+      ipcRenderer.send('fetch-post-quiz', objectQuestion)
+      break;
+  }
 })

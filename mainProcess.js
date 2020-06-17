@@ -6,7 +6,7 @@ const ROOT_URL = `http://localhost:${PORT}`
 
 
 let win = null;
-
+let enterCode = null;
 function createWindow() {
   win = new BrowserWindow({
     height: 400,
@@ -19,7 +19,7 @@ function createWindow() {
 
   //win.webContents.openDevTools();
   win.loadFile('./views/login/index.html');
-  win.removeMenu();
+  //win.removeMenu();
 
   ipcMain.on('accept-login-message', async (event, user) => {
     if (user.rule) {
@@ -29,10 +29,24 @@ function createWindow() {
       win.loadFile('./views/quizManagement/score/score.html');
       event.reply('send-session', { userName: user.userName, rule: user.rule, id: user._id });
     } else {
-      win.setResizable(true);
-      win.setSize(400, 200);
-      win.center();
-      win.loadFile('./views/testUi/loginCode/testLogin.html');
+
+      enterCode = new BrowserWindow({
+        height: 200,
+        width: 400,
+        webPreferences: {
+          nodeIntegration: true
+        },
+        resizable: false
+      });
+
+      win.hide();
+      enterCode.show();
+      enterCode.center();
+      enterCode.loadFile('./views/testUi/loginCode/testLogin.html');
+
+      enterCode.on('close', () => {
+        win.show();
+      })
     }
   })
 }
@@ -101,15 +115,19 @@ ipcMain.on('get-subjects', async (event) => {
 
 let addFrame = null;
 ipcMain.on('open-new-window', (_, isAdd) => {
-  win.hide();
+  //win.hide();
   addFrame = new BrowserWindow({
     parent: win,
+    modal: true,
     height: 400,
     width: 600,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+
   });
+
+  addFrame.flashFrame(true)
 
 
   addFrame.loadFile('./views/addQuiz/quizDetail.html');
@@ -231,9 +249,9 @@ ipcMain.on('login-fail', () => {
 
 let addSubject = null;
 ipcMain.on('add-subject', () => {
-  win.hide();
   addSubject = new BrowserWindow({
     parent: win,
+    modal: true,
     height: 200,
     width: 400,
     webPreferences: {
@@ -254,6 +272,8 @@ ipcMain.on('send-code-subject', async (event, code) => {
   const exam = await fetch(`${ROOT_URL}/getTestExam/${code}`, { method: 'GET' });
   const quizzesJson = await exam.json();
   if (quizzesJson) {
+    win.show();
+    enterCode.hide()
     win.loadFile('./views/testUi/examTest/examTest.html');
     win.setSize(1000, 700);
     win.center();
@@ -262,7 +282,6 @@ ipcMain.on('send-code-subject', async (event, code) => {
 })
 
 ipcMain.on('get-Quizzes', (event) => {
-  console.log(quizzes)
   if (quizzes) {
     event.reply('main-send-quizzes', quizzes);
   }
