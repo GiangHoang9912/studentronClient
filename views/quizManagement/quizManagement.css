@@ -63,8 +63,6 @@ table {
 
 html {
   margin: 0;
-  height: 100%;
-  width: 100%;
   background-repeat: no-repeat;
   background-size: cover;
   background-image: url('https://www.nationalgeographic.com/content/dam/yourshot/2018/10/12900534.ngsversion.1571254733633.adapt.1900.1.jpg');
@@ -82,6 +80,10 @@ html {
   margin: 100px auto;
   border-radius: 5px;
   margin-top: 4%;
+}
+
+* {
+  font-family: sans-serif;
 }
 
 table button:hover {

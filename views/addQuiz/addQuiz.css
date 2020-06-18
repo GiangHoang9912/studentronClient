@@ -4,6 +4,10 @@
   height: 20%;
 }
 
+* {
+  font-family: sans-serif;
+}
+
 #question {
   border: 1px solid gray;
 }

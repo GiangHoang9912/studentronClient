@@ -41,3 +41,11 @@ h3 {
   -webkit-transform: rotate(360deg);
   transform: rotate(360deg);
 }
+
+.textareaQuestion {
+  border: none;
+  resize: none;
+  outline: none;
+  height: 100%;
+  background-color: transparent;
+}

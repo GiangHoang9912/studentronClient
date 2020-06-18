@@ -72,8 +72,16 @@ function createTableQuizzes(quizzesJson) {
   for (const quiz of quizzesJson) {
     const trQuiz = document.createElement('tr');
     const tdQuestion = document.createElement('td');
-    const questionNode = document.createTextNode(quiz.question)
-    tdQuestion.appendChild(questionNode)
+    // const questionNode = document.createTextNode(quiz.question)
+
+    //! append textarea
+    const questionTextarea = document.createElement('textarea')
+    questionTextarea.setAttribute('class', 'textareaQuestion')
+    questionTextarea.readOnly = true;
+    questionTextarea.value = quiz.question;
+
+
+    tdQuestion.appendChild(questionTextarea)
 
 
     trQuiz.appendChild(tdQuestion)

@@ -43,7 +43,6 @@ function createWindow() {
       enterCode.show();
       enterCode.center();
       enterCode.loadFile('./views/testUi/loginCode/testLogin.html');
-
       enterCode.on('close', () => {
         win.show();
       })
@@ -154,11 +153,12 @@ ipcMain.on('open-new-window', (_, isAdd) => {
 })
 let sessions = null;
 
-ipcMain.once('send-session', (event, session) => {
+ipcMain.on('send-session', (event, session) => {
   sessions = session;
 })
 
 ipcMain.on('get-session', (event) => {
+
   event.reply('main-send-session', sessions)
 })
 
@@ -266,10 +266,13 @@ ipcMain.on('add-subject', () => {
   })
 })
 let quizzes = null;
+let examCode = null;
 ipcMain.on('send-code-subject', async (event, code) => {
+
   const exam = await fetch(`${ROOT_URL}/getTestExam/${code}`, { method: 'GET' });
   const quizzesJson = await exam.json();
   if (quizzesJson) {
+    examCode = code;
     win.show();
     enterCode.hide()
     win.loadFile('./views/testUi/examTest/examTest.html');
@@ -277,6 +280,10 @@ ipcMain.on('send-code-subject', async (event, code) => {
     win.center();
     quizzes = quizzesJson;
   }
+})
+
+ipcMain.once('get-exam-code', (event) => {
+  event.reply('main-sand-exam-code', examCode);
 })
 
 ipcMain.on('get-Quizzes', (event) => {
@@ -333,8 +340,35 @@ ipcMain.on('delete-subject', async (event, subjectId) => {
   }
 })
 
-ipcMain.once('finish-exam', (event, data) => {
-  console.log(data)
+ipcMain.once('finish-exam', (event, exam) => {
   //! fetch exam method post
+  console.log(exam)
+  // await fetch(`${ROOT_URL}/postExam/`, {
+  //   method: 'POST',
+  //   body: JSON.stringify(exam),
+  //   headers: {
+  //     "Content-Type": "application/json; charset=utf-8"
+  //   }
+  // }).then((res) => {
+  //   return res.json();
+  // }).then((status) => {
+  //   if (status.status === 200) {
+  //     // dialog.showMessageBox({
+  //     //   buttons: ["Yes", "No"],
+  //     //   message: "Insert done, Do you really want to quit?"
+  //     // }).then((res) => {
+  //     //   win.send('update-quiz');
+  //     //   if (!res.response) {
+  //     //     addFrame.close();
+  //     //   }
+  //     // })
+  //   } else {
+  //     throw new Error();
+  //   }
+  // }).catch(() =>
+  //   dialog.showMessageBox({
+  //     message: "insert fail, please try again...!"
+  //   })
+  // )
 })
 //MAE101_WMSj9hlTkhKGJTjM
