@@ -2,18 +2,32 @@ const { ipcRenderer } = require("electron");
 const displayQuestion = document.querySelector('.displayQuestion');
 const buttonQuestion = document.querySelector('.buttonQuestion');
 const displayAnswer = document.querySelector('.answers');
+const checkboxExit = document.querySelector('#exitExam');
+const btnFinish = document.querySelector('#finish');
 const divInfo = document.querySelector('.info');
-const Quiz = require('../entity/Quiz');
+const current_date = new Date();
+const userId = sessionStorage.getItem('id')
+const { removeSession } = require('../../createElement')
 let currentQuizId = null;
 const HOUR_MINUTE = 60;
 const MINUTE_SECOND = 60;
 let Duration = 0;
 
-
-
 ipcRenderer.send('get-Quizzes');
 
 ipcRenderer.send('get-computer-name')
+
+checkboxExit.addEventListener('change', (e) => {
+  e.preventDefault();
+
+  if (checkboxExit.checked) {
+    btnFinish.disabled = false;
+  } else {
+    btnFinish.disabled = true;
+  }
+})
+
+
 
 let userExam = null;
 ipcRenderer.on('main-send-quizzes', (event, quizzes) => {
@@ -45,7 +59,9 @@ ipcRenderer.on('main-send-quizzes', (event, quizzes) => {
     }
 
     if (TOTAL_TIME < 0) {
-      ipcRenderer.send('finish-exam', userExam);
+      const date = `${current_date.getDate()}/${current_date.getMonth() + 1}/${current_date.getFullYear()}`
+      console.log(userExam)
+      ipcRenderer.send('finish-exam', { userId: userId, exam: userExam, date: date });
       clearInterval(time)
     }
   }, 100);
@@ -55,10 +71,14 @@ ipcRenderer.on('main-send-quizzes', (event, quizzes) => {
   }
 })
 
-
+btnFinish.addEventListener('click', () => {
+  const date = `${current_date.getDate()}/${current_date.getMonth() + 1}/${current_date.getFullYear()}`
+  ipcRenderer.send('finish-exam', { userId: userId, exam: userExam, date: date });
+  removeSession();
+  ipcRenderer.send('user-Logout')
+})
 
 const createQuizFrame = (quiz) => {
-  console.log(quiz.answer)
   displayQuestion.innerHTML = '';
   displayAnswer.innerHTML = '';
   const divQuestion = document.createElement('div');
@@ -93,7 +113,6 @@ const createQuizFrame = (quiz) => {
 
       const inputChecked = displayAnswer.querySelectorAll('input:checked');
 
-
       for (const input of inputChecked) {
         arrTextAnswer.push(input.value)
       }
@@ -101,6 +120,7 @@ const createQuizFrame = (quiz) => {
       for (const question of userExam) {
         if (question.questionId === currentQuizId) {
           question.userAnswer = inputChecked;
+
           question.textAnswers = arrTextAnswer;
           break;
         }
@@ -108,9 +128,11 @@ const createQuizFrame = (quiz) => {
     })
 
     if (quiz.correctLength > 1) {
+      document.querySelector('#typeQuestion').textContent = 'multiple choice'
       inputEl.setAttribute('type', 'checkbox');
       inputEl.setAttribute('id', `answer-${i}`)
     } else {
+      document.querySelector('#typeQuestion').textContent = 'single choice'
       inputEl.setAttribute('type', 'radio')
       inputEl.setAttribute('name', 'answersRadio')
       inputEl.setAttribute('id', `answer-${i}`)
@@ -167,7 +189,12 @@ const createDivInfo = (examCode) => {
   const duration = document.createElement('h4');
   duration.textContent = `Duration : ${Duration} (minutes)`;
 
+
+  const date = document.createElement('h4');
+  date.textContent = `Date : ${current_date.getDate()}-${current_date.getMonth() + 1}-${current_date.getFullYear()}`;
+
   divInfo.appendChild(userName)
   divInfo.appendChild(code)
   divInfo.appendChild(duration)
+  divInfo.appendChild(date)
 }

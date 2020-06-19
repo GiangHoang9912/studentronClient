@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain, dialog, ipcRenderer } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron')
+const electronLocalshortcut = require('electron-localshortcut');
 const { validateUserName } = require('./validateInput')
 const fetch = require('node-fetch');
 const PORT = 3000;
@@ -16,10 +17,9 @@ function createWindow() {
     },
     resizable: false
   });
-
   //win.webContents.openDevTools();
   win.loadFile('./views/login/index.html');
-  //win.removeMenu();
+  win.removeMenu();
 
   ipcMain.on('accept-login-message', async (event, user) => {
     if (user.rule) {
@@ -29,7 +29,6 @@ function createWindow() {
       win.loadFile('./views/quizManagement/score/score.html');
       event.reply('send-session', { userName: user.userName, rule: user.rule, id: user._id });
     } else {
-
       enterCode = new BrowserWindow({
         height: 200,
         width: 400,
@@ -41,6 +40,7 @@ function createWindow() {
 
       win.hide();
       enterCode.show();
+      enterCode.removeMenu();
       enterCode.center();
       enterCode.loadFile('./views/testUi/loginCode/testLogin.html');
       enterCode.on('close', () => {
@@ -51,7 +51,15 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
+
+  globalShortcut.register('Alt+Tab', () => {
+    console.log('Alt+Tab is pressed')
+  })
+
+  electronLocalshortcut.register(win, 'Alt+Tab', () => {
+    console.log('You pressed ctrl & R or F5');
+  });
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -79,7 +87,7 @@ ipcMain.on('open-Quizzes', (event, session) => {
 })
 ipcMain.on('user-Logout', () => {
   win.setSize(300, 400)
-  win.setResizable(false)
+  //win.setResizable(false)
   win.loadFile('./views/login/index.html');
 })
 
@@ -276,13 +284,15 @@ ipcMain.on('send-code-subject', async (event, code) => {
     win.show();
     enterCode.hide()
     win.loadFile('./views/testUi/examTest/examTest.html');
-    win.setSize(1000, 700);
-    win.center();
+    win.setFullScreen(true)
+
+    //win.setSize(1000, 700);
+    //win.center();
     quizzes = quizzesJson;
   }
 })
 
-ipcMain.once('get-exam-code', (event) => {
+ipcMain.on('get-exam-code', (event) => {
   event.reply('main-sand-exam-code', examCode);
 })
 
@@ -340,35 +350,34 @@ ipcMain.on('delete-subject', async (event, subjectId) => {
   }
 })
 
-ipcMain.once('finish-exam', (event, exam) => {
+ipcMain.on('finish-exam', async (event, exam) => {
   //! fetch exam method post
-  console.log(exam)
-  // await fetch(`${ROOT_URL}/postExam/`, {
-  //   method: 'POST',
-  //   body: JSON.stringify(exam),
-  //   headers: {
-  //     "Content-Type": "application/json; charset=utf-8"
-  //   }
-  // }).then((res) => {
-  //   return res.json();
-  // }).then((status) => {
-  //   if (status.status === 200) {
-  //     // dialog.showMessageBox({
-  //     //   buttons: ["Yes", "No"],
-  //     //   message: "Insert done, Do you really want to quit?"
-  //     // }).then((res) => {
-  //     //   win.send('update-quiz');
-  //     //   if (!res.response) {
-  //     //     addFrame.close();
-  //     //   }
-  //     // })
-  //   } else {
-  //     throw new Error();
-  //   }
-  // }).catch(() =>
-  //   dialog.showMessageBox({
-  //     message: "insert fail, please try again...!"
-  //   })
-  // )
+  await fetch(`${ROOT_URL}/postExam/${examCode}`, {
+    method: 'POST',
+    body: JSON.stringify(exam),
+    headers: {
+      "Content-Type": "application/json; charset=utf-8"
+    }
+  }).then((res) => {
+    return res.json();
+  }).then((status) => {
+    if (status.status === 200) {
+      // dialog.showMessageBox({
+      //   buttons: ["Yes", "No"],
+      //   message: "Insert done, Do you really want to quit?"
+      // }).then((res) => {
+      //   win.send('update-quiz');
+      //   if (!res.response) {
+      //     addFrame.close();
+      //   }
+      // })
+    } else {
+      throw new Error();
+    }
+  }).catch(() =>
+    dialog.showMessageBox({
+      message: "submit fail, please try again...!"
+    })
+  )
 })
 //MAE101_WMSj9hlTkhKGJTjM

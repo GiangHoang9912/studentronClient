@@ -22,8 +22,13 @@ const resetTableScore = () => {
   const scoreNode = document.createTextNode('score')
   tdScore.appendChild(scoreNode);
 
+  const tdDate = document.createElement('th');
+  const dateNode = document.createTextNode('Date (dd/mm/yyyy)')
+  tdDate.appendChild(dateNode);
+
   trHeader.appendChild(tdSubject);
   trHeader.appendChild(tdScore);
+  trHeader.appendChild(tdDate);
 
   scoreTable.appendChild(trHeader);
 }

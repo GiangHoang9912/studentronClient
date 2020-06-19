@@ -22,24 +22,29 @@ h3 {
   margin: auto;
   border: 1px solid gray;
   border-radius: 10px;
+  background-color: #f7d794;
 }
 
 .header {
   display: flex;
-  height: 100px;
+  height: 110px;
   width: 100%;
-  background-color: #636e72;
+  background-color: #3ae374;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
-.buttonQuestion {
-  height: 100px;
+.divBtn {
+  height: 110px;
   width: 100%;
-  background-color: red;
+  background-color: #3ae374;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  line-height: 100px;
+}
+
+.buttonQuestion {
+  height: 50px;
+  line-height: 50px;
 }
 
 .buttonQuestion button {
@@ -48,11 +53,12 @@ h3 {
 
 .container {
   margin-top: 2rem;
+  min-width: 450px;
 }
 
 .frameQuiz {
   height: 20rem;
-  background-color: honeydew;
+  background-color: #f7d794;
   padding-left: 5px;
 }
 
@@ -84,6 +90,19 @@ html {
   padding: 5px;
 }
 
+.footer {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer #finish {
+  margin-left: 5px;
+  height: 25px;
+  width: 50px;
+  border: none;
+  margin-top: 5px;
+}
+
 .answers {
   height: 180px;
   overflow: auto;
@@ -93,4 +112,20 @@ html {
   font-size: 24px;
   line-height: 100px;
   padding-left: 1rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+input {
+  cursor: pointer;
+}
+
+fieldset {
+  background-color: #f7d794;
+}
+
+legend {
+  font-size: 24px;
 }

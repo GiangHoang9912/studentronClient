@@ -68,6 +68,11 @@ async function getAllStudent(allStuson) {
         subjectScore.appendChild(scoreNode)
         trSubject.appendChild(subjectScore);
 
+        const tdDate = document.createElement('td')
+        const dateNode = document.createTextNode(`${subject.date}`)
+        tdDate.appendChild(dateNode)
+        trSubject.appendChild(tdDate);
+
         scoreTable.appendChild(trSubject)
       }
 
