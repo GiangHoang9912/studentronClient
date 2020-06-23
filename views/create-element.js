@@ -9,6 +9,7 @@ const removeSession = () => {
   sessionStorage.removeItem('id');
   sessionStorage.removeItem('name');
   sessionStorage.removeItem('rule');
+  sessionStorage.removeItem('pass');
 }
 
 const resetTableScore = () => {

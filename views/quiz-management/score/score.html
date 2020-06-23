@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz Management</title>
-  <link rel="stylesheet" href="../quizManagement.css">
-  <link rel="stylesheet" href="./quiz.css">
+  <title>Student Management</title>
+  <link rel="stylesheet" href="../quiz-management.css">
+  <link rel="stylesheet" href="./score.css">
 </head>
 
 <body>
@@ -31,25 +31,32 @@
         </img>
       </div>
     </div>
-    <div class="divSubject">
-      <label for="subject">Choose subject:</label>
-
-      <select ct name="subject" id="subject">
-      </select>
-
-    </div>
-
-    <div class="quiz">
-
-      <h3 id="quizManager">Quizzes</h3>
-      <img id="btn_add" src="https://image.flaticon.com/icons/svg/1828/1828919.svg" alt="">
-      <table id="quizMana">
-
+    <div class="content">
+      <h3>Students</h3>
+      <table id="account">
+        <tr>
+          <th>
+            Student Account Name
+          </th>
+          <th>
+            Show
+          </th>
+        </tr>
       </table>
+      <div class="studentScore">
+        <h3 id="studentName">Student Name : </h3>
+        <table id="score">
+          <tr>
+            <th>Subject</th>
+            <th>Score</th>
+            <th>Date (dd/mm/yyyy)</th>
+          </tr>
+        </table>
+      </div>
     </div>
     <div class="footer"></div>
-    <script src="./quiz.js"></script>
   </div>
+  <script src="./score.js"></script>
 </body>
 
 </html>

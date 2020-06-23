@@ -7,15 +7,12 @@ const btnFinish = document.querySelector('#finish');
 const divInfo = document.querySelector('.info');
 const current_date = new Date();
 const userId = sessionStorage.getItem('id')
-const { removeSession } = require('../../createElement')
 let currentQuizId = null;
 const HOUR_MINUTE = 60;
 const MINUTE_SECOND = 60;
 let Duration = 0;
 
 ipcRenderer.send('get-Quizzes');
-
-ipcRenderer.send('get-computer-name')
 
 checkboxExit.addEventListener('change', (e) => {
   e.preventDefault();
@@ -60,8 +57,8 @@ ipcRenderer.on('main-send-quizzes', (event, quizzes) => {
 
     if (TOTAL_TIME < 0) {
       const date = `${current_date.getDate()}/${current_date.getMonth() + 1}/${current_date.getFullYear()}`
-      console.log(userExam)
       ipcRenderer.send('finish-exam', { userId: userId, exam: userExam, date: date });
+      ipcRenderer.send('loading-enterCode');
       clearInterval(time)
     }
   }, 100);
@@ -74,8 +71,7 @@ ipcRenderer.on('main-send-quizzes', (event, quizzes) => {
 btnFinish.addEventListener('click', () => {
   const date = `${current_date.getDate()}/${current_date.getMonth() + 1}/${current_date.getFullYear()}`
   ipcRenderer.send('finish-exam', { userId: userId, exam: userExam, date: date });
-  removeSession();
-  ipcRenderer.send('user-Logout')
+  ipcRenderer.send('loading-enterCode');
 })
 
 const createQuizFrame = (quiz) => {

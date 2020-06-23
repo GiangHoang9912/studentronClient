@@ -9,9 +9,14 @@
 
 #btn_start {
   margin-top: 1rem;
-  position: absolute;
 }
 
 * {
   font-family: sans-serif;
+}
+
+#quit {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }

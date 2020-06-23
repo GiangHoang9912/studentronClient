@@ -1,7 +1,7 @@
 const { ipcRenderer } = require("electron");
 const remote = require('electron').remote;
 
-const { createOption, createDivAnswer } = require('../createElement')
+const { createOption, createDivAnswer } = require('../create-element')
 
 
 const btn_add_answer = document.querySelector('#btn_add_answer');

@@ -24,6 +24,7 @@ document.querySelector('form').addEventListener('submit', async (event) => {
             sessionStorage.setItem("rule", data.rule);
             sessionStorage.setItem("name", data.userName);
             sessionStorage.setItem("id", data._id);
+            sessionStorage.setItem("pass", data.pass)
             ipcRenderer.send('accept-login-message', data);
         } else
             throw new Error()
@@ -46,3 +47,6 @@ iconPass.addEventListener('click', (e) => {
     e.preventDefault();
     pass.focus();
 })
+
+userName.value = sessionStorage.getItem('name')
+pass.value = sessionStorage.getItem('pass')

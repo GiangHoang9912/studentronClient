@@ -2,7 +2,7 @@
   "name": "studentron",
   "version": "1.0.0",
   "description": "A minimal Electron application",
-  "main": "mainProcess.js",
+  "main": "index.js",
   "scripts": {
     "start": "electron ."
   },

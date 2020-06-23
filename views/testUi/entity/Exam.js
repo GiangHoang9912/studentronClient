@@ -1,5 +1,0 @@
-class Exam {
-  constructor(userId, ) { 
-    
-  }
-}

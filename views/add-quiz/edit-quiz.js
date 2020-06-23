@@ -1,6 +1,6 @@
 const { ipcRenderer } = require("electron");
 ipcRenderer.send('get-quiz-edit');
-const { createOption, createDivAnswer } = require('../createElement');
+const { createOption, createDivAnswer } = require('../create-element');
 const selectionTag = document.querySelector('#subject')
 const btn_save = document.querySelector('#btn_submit');
 const btn_add_answer = document.querySelector('#btn_add_answer');

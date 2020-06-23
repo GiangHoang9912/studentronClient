@@ -2,7 +2,7 @@ const btn_quizzes = document.querySelector('#btn_Quizzes');
 const btn_Student = document.querySelector('#btn_Student');
 const btn_Logout = document.querySelector('#btn_Logout');
 const { ipcRenderer } = require('electron');
-const { removeSession, resetTableScore } = require('../../createElement.js');
+const { removeSession, resetTableScore } = require('../../create-element.js');
 const btn_subject = document.querySelector('#btn_Subject')
 
 btn_Student.disabled = true;

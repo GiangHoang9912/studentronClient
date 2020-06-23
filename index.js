@@ -1,10 +1,8 @@
-const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron')
-const electronLocalshortcut = require('electron-localshortcut');
-const { validateUserName } = require('./validateInput')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const fetch = require('node-fetch');
+const fs = require('fs-extra')
 const PORT = 3000;
-const ROOT_URL = `http://localhost:${PORT}`
-
+const ROOT_URL = `http://localhost:${PORT}`;
 
 let win = null;
 let enterCode = null;
@@ -17,19 +15,19 @@ function createWindow() {
     },
     resizable: false
   });
-  //win.webContents.openDevTools();
   win.loadFile('./views/login/index.html');
-  win.removeMenu();
+  //win.removeMenu();
 
   ipcMain.on('accept-login-message', async (event, user) => {
     if (user.rule) {
       win.setResizable(true);
       win.setSize(1000, 700);
       win.center();
-      win.loadFile('./views/quizManagement/score/score.html');
+      win.loadFile('./views/quiz-management/score/score.html');
       event.reply('send-session', { userName: user.userName, rule: user.rule, id: user._id });
     } else {
       enterCode = new BrowserWindow({
+        parent: win,
         height: 200,
         width: 400,
         webPreferences: {
@@ -42,8 +40,12 @@ function createWindow() {
       enterCode.show();
       enterCode.removeMenu();
       enterCode.center();
-      enterCode.loadFile('./views/testUi/loginCode/testLogin.html');
+      enterCode.loadFile('./views/test-ui/login-code/test-login.html');
       enterCode.on('close', () => {
+        win.loadFile('./views/login/index.html');
+        win.setSize(300, 400)
+        win.setFullScreen(false);
+        win.center();
         win.show();
       })
     }
@@ -52,14 +54,6 @@ function createWindow() {
 
 app.whenReady().then(() => {
   createWindow();
-
-  globalShortcut.register('Alt+Tab', () => {
-    console.log('Alt+Tab is pressed')
-  })
-
-  electronLocalshortcut.register(win, 'Alt+Tab', () => {
-    console.log('You pressed ctrl & R or F5');
-  });
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -70,31 +64,29 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
 
-
 ipcMain.on('open-Students', (event, session) => {
   if (session.rule == 1) {
-    win.loadFile('./views/quizManagement/score/score.html')
+    win.loadFile('./views/quiz-management/score/score.html')
   } else {
     return;
   }
 })
 ipcMain.on('open-Quizzes', (event, session) => {
   if (session.rule == 1) {
-    win.loadFile('./views/quizManagement/quiz/quiz.html')
+    win.loadFile('./views/quiz-management/quiz/quiz.html')
   } else {
     return;
   }
 })
 ipcMain.on('user-Logout', () => {
-  win.setSize(300, 400)
-  //win.setResizable(false)
+  win.setSize(300, 400);
+  win.setFullScreen(false)
   win.loadFile('./views/login/index.html');
 })
 
 ipcMain.on('students-fetching', async (event) => {
   const students = await fetch(`${ROOT_URL}/allStudent`, { method: 'GET' });
   const studentsJson = await students.json();
-
   event.reply('students-json', studentsJson)
 })
 
@@ -131,18 +123,15 @@ ipcMain.on('open-new-window', (_, isAdd) => {
     webPreferences: {
       nodeIntegration: true
     },
-
   });
 
   addFrame.flashFrame(true)
+  addFrame.loadFile('./views/add-quiz/quiz-detail.html');
 
-
-  addFrame.loadFile('./views/addQuiz/quizDetail.html');
-  //addFrame.removeMenu()
   addFrame.webContents.once('dom-ready', () => {
     if (isAdd.isAdd) {
       addFrame.webContents.executeJavaScript(`
-        require('./addQuiz.js');
+        require('./add-quiz.js');
       `)
     } else {
       ipcMain.once('get-quiz-edit', (event) => {
@@ -150,7 +139,7 @@ ipcMain.on('open-new-window', (_, isAdd) => {
       });
       addFrame.webContents.executeJavaScript(`
         document.title = 'Edit Quiz';
-        require('./editQuiz.js');
+        require('./edit-quiz.js');
       `)
     }
   })
@@ -166,7 +155,6 @@ ipcMain.on('send-session', (event, session) => {
 })
 
 ipcMain.on('get-session', (event) => {
-
   event.reply('main-send-session', sessions)
 })
 
@@ -200,7 +188,6 @@ ipcMain.on('fetch-post-quiz', async (event, quiz) => {
   )
 })
 
-
 ipcMain.on('fetch-post-edit-quiz', async (event, quiz) => {
   await fetch(`${ROOT_URL}/updateQuiz/`, {
     method: 'PUT',
@@ -231,7 +218,6 @@ ipcMain.on('fetch-post-edit-quiz', async (event, quiz) => {
   )
 })
 
-
 ipcMain.on('disable-enable-quiz', async (event, payload) => {
   await fetch(`${ROOT_URL}/disableQuiz/`, {
     method: 'PUT',
@@ -254,7 +240,6 @@ ipcMain.on('login-fail', () => {
   dialog.showErrorBox('login', 'login fail, please try again...!')
 })
 
-
 let addSubject = null;
 ipcMain.on('add-subject', () => {
   addSubject = new BrowserWindow({
@@ -267,7 +252,7 @@ ipcMain.on('add-subject', () => {
     }
   });
 
-  addSubject.loadFile('./views/addSubject/addSubject.html');
+  addSubject.loadFile('./views/add-subject/add-subject.html');
 
   addSubject.on('close', () => {
     win.show();
@@ -276,18 +261,16 @@ ipcMain.on('add-subject', () => {
 let quizzes = null;
 let examCode = null;
 ipcMain.on('send-code-subject', async (event, code) => {
-
   const exam = await fetch(`${ROOT_URL}/getTestExam/${code}`, { method: 'GET' });
   const quizzesJson = await exam.json();
+
   if (quizzesJson) {
     examCode = code;
-    win.show();
     enterCode.hide()
-    win.loadFile('./views/testUi/examTest/examTest.html');
+    win.setAlwaysOnTop(true)
+    win.loadFile('./views/test-ui/exam-test/exam-test.html');
     win.setFullScreen(true)
-
-    //win.setSize(1000, 700);
-    //win.center();
+    win.show();
     quizzes = quizzesJson;
   }
 })
@@ -303,7 +286,7 @@ ipcMain.on('get-Quizzes', (event) => {
 })
 
 ipcMain.on('open-subject', (event) => {
-  win.loadFile('./views/quizManagement/subject/subject.html')
+  win.loadFile('./views/quiz-management/subject/subject.html')
 })
 
 ipcMain.on('save-subject', async (event, subject) => {
@@ -349,9 +332,16 @@ ipcMain.on('delete-subject', async (event, subjectId) => {
     }
   }
 })
-
+let score = 0;
 ipcMain.on('finish-exam', async (event, exam) => {
-  //! fetch exam method post
+  win.setAlwaysOnTop(false)
+
+  console.log(exam.exam)
+
+  fs.writeFile(`./exam/${exam.userId}-${Date.now()}.json`, JSON.stringify(exam.exam), (err) => {
+    if (err) throw err;
+  });
+
   await fetch(`${ROOT_URL}/postExam/${examCode}`, {
     method: 'POST',
     body: JSON.stringify(exam),
@@ -362,15 +352,7 @@ ipcMain.on('finish-exam', async (event, exam) => {
     return res.json();
   }).then((status) => {
     if (status.status === 200) {
-      // dialog.showMessageBox({
-      //   buttons: ["Yes", "No"],
-      //   message: "Insert done, Do you really want to quit?"
-      // }).then((res) => {
-      //   win.send('update-quiz');
-      //   if (!res.response) {
-      //     addFrame.close();
-      //   }
-      // })
+      score = status.score;
     } else {
       throw new Error();
     }
@@ -380,4 +362,12 @@ ipcMain.on('finish-exam', async (event, exam) => {
     })
   )
 })
-//MAE101_WMSj9hlTkhKGJTjM
+
+ipcMain.on('loading-enterCode', (event) => {
+  win.hide();
+  enterCode.show();
+})
+
+ipcMain.on('student-quit', () => {
+  win.close();
+})
