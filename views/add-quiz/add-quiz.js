@@ -1,16 +1,11 @@
 const { ipcRenderer } = require("electron");
 const remote = require('electron').remote;
-
 const { createOption, createDivAnswer } = require('../create-element')
-
-
 const btn_add_answer = document.querySelector('#btn_add_answer');
 const selectionTag = document.querySelector('#subject')
 const submit = document.querySelector('form');
 
-
 let sessions = null;
-
 
 ipcRenderer.send('get-subjects')
 
@@ -33,7 +28,6 @@ btn_add_answer.addEventListener('click', (e) => {
 submit.addEventListener('submit', (e) => {
   e.preventDefault();
 
-
   const question = document.querySelector('#question textarea').value;
   const answersTextarea = document.querySelectorAll('#answers textarea');
   let arrAnswer = [];
@@ -50,7 +44,6 @@ submit.addEventListener('submit', (e) => {
       correct.push(i);
     }
   }
-
 
   const objectQuestion = {
     subject: selectionTag.value,

@@ -1,5 +1,4 @@
 const { ipcRenderer } = require("electron");
-
 const form = document.querySelector('form');
 
 form.addEventListener('submit', (e) => {

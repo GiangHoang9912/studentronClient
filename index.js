@@ -3,9 +3,11 @@ const fetch = require('node-fetch');
 const fs = require('fs-extra')
 const PORT = 3000;
 const ROOT_URL = `http://localhost:${PORT}`;
-
+let quizzes = null;
+let examCode = null;
 let win = null;
 let enterCode = null;
+
 function createWindow() {
   win = new BrowserWindow({
     height: 400,
@@ -16,7 +18,6 @@ function createWindow() {
     resizable: false
   });
   win.loadFile('./views/login/index.html');
-  //win.removeMenu();
 
   ipcMain.on('accept-login-message', async (event, user) => {
     if (user.rule) {
@@ -114,7 +115,6 @@ ipcMain.on('get-subjects', async (event) => {
 
 let addFrame = null;
 ipcMain.on('open-new-window', (_, isAdd) => {
-  //win.hide();
   addFrame = new BrowserWindow({
     parent: win,
     modal: true,
@@ -258,8 +258,7 @@ ipcMain.on('add-subject', () => {
     win.show();
   })
 })
-let quizzes = null;
-let examCode = null;
+
 ipcMain.on('send-code-subject', async (event, code) => {
   const exam = await fetch(`${ROOT_URL}/getTestExam/${code}`, { method: 'GET' });
   const quizzesJson = await exam.json();

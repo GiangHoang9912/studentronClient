@@ -1,11 +1,6 @@
 const { ipcRenderer } = require("electron");
-
-
 const form = document.querySelector('form');
-const btnShowScore = document.querySelector('#btn_show_score');
 const btnQuit = document.querySelector('#quit');
-
-
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();

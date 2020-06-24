@@ -42,7 +42,6 @@ iconUser.addEventListener('click', (e) => {
     userName.focus();
 })
 
-
 iconPass.addEventListener('click', (e) => {
     e.preventDefault();
     pass.focus();

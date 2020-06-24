@@ -11,6 +11,7 @@ let currentQuizId = null;
 const HOUR_MINUTE = 60;
 const MINUTE_SECOND = 60;
 let Duration = 0;
+let userExam = null;
 
 ipcRenderer.send('get-Quizzes');
 
@@ -24,9 +25,6 @@ checkboxExit.addEventListener('change', (e) => {
   }
 })
 
-
-
-let userExam = null;
 ipcRenderer.on('main-send-quizzes', (event, quizzes) => {
   createQuizFrame(quizzes[0]);
   currentQuizId = quizzes[0]._id;
@@ -61,7 +59,7 @@ ipcRenderer.on('main-send-quizzes', (event, quizzes) => {
       ipcRenderer.send('loading-enterCode');
       clearInterval(time)
     }
-  }, 100);
+  }, 1000);
 
   for (let i = 0; i < quizzes.length; i++) {
     generateBtnQuestion(i + 1, quizzes[i]);
@@ -170,7 +168,6 @@ const generateBtnQuestion = (i, quiz) => {
 
 ipcRenderer.send('get-exam-code');
 
-
 ipcRenderer.on('main-sand-exam-code', (event, examCode) => {
   createDivInfo(examCode)
 })
@@ -184,7 +181,6 @@ const createDivInfo = (examCode) => {
 
   const duration = document.createElement('h4');
   duration.textContent = `Duration : ${Duration} (minutes)`;
-
 
   const date = document.createElement('h4');
   date.textContent = `Date : ${current_date.getDate()}-${current_date.getMonth() + 1}-${current_date.getFullYear()}`;

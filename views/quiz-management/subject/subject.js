@@ -1,11 +1,10 @@
 const { ipcRenderer } = require('electron');
+const { createTableSubject, removeSession, resetTableSubject } = require('../../create-element.js');
 const btn_quizzes = document.querySelector('#btn_Quizzes');
 const btn_Student = document.querySelector('#btn_Student');
 const btn_Logout = document.querySelector('#btn_Logout');
 const btn_subject = document.querySelector('#btn_Subject');
 const btn_add_subject = document.querySelector('#btn_add_subject');
-const { createTableSubject, removeSession, resetTableSubject } = require('../../create-element.js');
-const subjectTable = document.querySelector('#subject')
 
 btn_subject.disabled = true;
 

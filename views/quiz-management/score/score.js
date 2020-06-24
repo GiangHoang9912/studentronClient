@@ -1,9 +1,10 @@
-const btn_quizzes = document.querySelector('#btn_Quizzes');
-const btn_Student = document.querySelector('#btn_Student');
-const btn_Logout = document.querySelector('#btn_Logout');
 const { ipcRenderer } = require('electron');
 const { removeSession, resetTableScore } = require('../../create-element.js');
 const btn_subject = document.querySelector('#btn_Subject')
+const btn_quizzes = document.querySelector('#btn_Quizzes');
+const btn_Student = document.querySelector('#btn_Student');
+const btn_Logout = document.querySelector('#btn_Logout');
+const accTable = document.querySelector('#account');
 
 btn_Student.disabled = true;
 
@@ -28,10 +29,7 @@ btn_subject.addEventListener('click', (e) => {
   ipcRenderer.send('open-subject');
 })
 
-
-
 async function getAllStudent(allStuson) {
-  const accTable = document.querySelector('#account');
   for (const student of allStuson) {
     const trStudent = document.createElement('tr');
     const tdName = document.createElement('td');
@@ -40,7 +38,6 @@ async function getAllStudent(allStuson) {
     const tdShow = document.createElement('td');
     const btnShow = document.createElement('button');
     const btnNode = document.createTextNode('Show');
-
 
     btnShow.addEventListener('click', async (e) => {
       e.preventDefault();
